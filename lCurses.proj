@@ -1,0 +1,22 @@
+lCurses=$PWD CD=. {
+    Makefile
+    README
+    COPYING
+    Lua=Lua CD=. {
+        Makefile
+        struct.lua
+        switch.lua
+        Curses=Curses CD=. {
+            Curses.lua
+            Constants.lua
+        }
+    }
+    C=C CD=. {
+        Makefile
+        lcurses.c
+    }
+    Test=Test CD=. {
+        curses_test.lua
+        curses2_test.lua
+    }
+}

@@ -26,6 +26,7 @@ install: all
 	@echo " === Installing $(LIBNAMESO) === "
 	@mkdir -p $(PREFIX)/lib/
 	@cp $(BUILDLIBDIR)/$(LIBNAMESO) $(PREFIX)/lib
+	@pushd $(PREFIX)/lib;ln -s $(LIBNAMESO) $(LIBNAME).so ; popd
 
 uninstall:
 	@echo " === Uninstalling $(LIBNAMESO) === "

@@ -19,12 +19,17 @@ PROJECTMOD = ${PROJECT}
 all: library auxlibraries
 
 library: $(LUADIR)/${PROJECT}/${PROJECT}.lua
-	@cp $(LUADIR)/${PROJECT}/${PROJECT}.lua $(BUILDSHAREDDIR)/${PROJECT}
+	@echo " ==== Copying lua libraries [LUA] ==== "
+	@for i in `echo ${LIBRARYFILES}`; do \
+		echo "   --> $$i [LUA] " ; \
+		cp $$i ${BUILDSHAREDDIR}/${PROJECT} ; \
+	done
 
 auxlibraries: $(LUADIR)/struct.lua $(LUADIR)/switch.lua
 	@echo " ==== Copying lua libraries [LUA] ==== "
 	@cp $(LUADIR)/struct.lua $(BUILDSHAREDDIR)/$(PROJECT)
 	@cp $(LUADIR)/switch.lua $(BUILDSHAREDDIR)/$(PROJECT)
+	@cp $(LUADIR)/alienize.lua $(BUILDSHAREDDIR)/$(PROJECT)
 
 constants: $(CONSTANTSDEF)
 	@echo " ==== Building ${PROJECT} Constants [$(CONSTANTSLUA)] ===="
@@ -42,7 +47,7 @@ install: all
 	@cp -r $(BUILDSHAREDDIR)/${PROJECT} $(PREFIX)/share
 
 
-uninstall: 
+uninstall:
 	@echo " == Uninstalling ${PROJECT}.lua == "
 	@rm -rf $(PREFIX)/share/${PROJECT}
 

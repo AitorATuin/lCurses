@@ -1,14 +1,6 @@
---@+leo-ver=4-encoding=iso-8859-15,.
---@+node:@file Switch.lua
---@@language lua
---@@encoding iso-8859-15
---@@pagewidth 80
---@@tabwidth 2
--- Case implementation
--- Based on: http://lua-users.org/wiki/SwitchStatement
---
+local M = {}
 
-function switch(c)
+M.switch = function (c)
     local swtbl = {
         casevar = c,
         caseof = function (self, code, ...)
@@ -37,3 +29,4 @@ function switch(c)
     return swtbl
 end
 
+return M

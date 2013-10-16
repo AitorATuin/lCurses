@@ -9,15 +9,14 @@ int getmax_y (WINDOW * w)
 
 int getmax_x (WINDOW * w)
 {
-//	return (((w)?((w)->_maxx + 1):(-1)));
-	return getmaxx(w);
+    return getmaxx(w);
 };
 
 int _color_pair (short color)
 {
-	if (has_colors()) 
-		return COLOR_PAIR(color);
-	return -1;
+    if (has_colors())
+	return COLOR_PAIR(color);
+    return -1;
 };
 
 WINDOW * _new_win (int lines, int cols, int y, int x)

@@ -12,37 +12,15 @@ Curses.configure = function ()
    if not ncursesWrapper then
       error(string.format("Could not load liblcurses.so library: %s", err))
    end
---[[
-   local SOPATH = os.getenv("INOTIFYSO_DIR") or "/usr/lib/lua"
-   local PATHS = {
-      os.getenv("INOTIFYSODIR") or "./",
-      os.getenv("HOME") .. "/.lua/lib/",
-   }
-   for p in package.cpath:gmatch("[^;]+") do
-      PATHS[#PATHS+1] = p:match("(.+)/+[^/]+$")
-   end
-   local libinotify, success
-   for _, p in ipairs(PATHS) do
-      success, ncursesWrapper = pcall(alien.load,
-                                  p.."/liblcurses.0.1.so")
-      if success then
-         break
-      end
-   end
 
-   if not success then
-      return nil, "Could not load liblcurses.0.1.so"
-   else--]]
-     --local ncurses = alien.load("ncurses")
-     local panel = alien.load("panelw")
-     local ncurses = alien.load("ncursesw")
-     M.init(ncurses, panel, ncursesWrapper)
-     M.init = nil
-          --M.new = M.new(ncurses, panel, ncursesWrapper)
-     return setmetatable(M, {
-                            __index = M_mt
-     })
-   --end
+   local panel = alien.load("panelw")
+   local ncurses = alien.load("ncursesw")
+   M.init(ncurses, panel, ncursesWrapper)
+   M.init = nil
+
+   return setmetatable(M, {
+                          __index = M_mt
+   })
 end
 
 -- Module table functions
@@ -242,9 +220,33 @@ M.init = function (ncurses, panel, ncursesWrapper)
       CURSOR_NORMAL      = 1,
       CURSOR_VERYVISIBLE = 2,
    }
+   local keys = {}
+   keys[27] = "KEY_ESC"
+   keys[258] = "KEY_DOWN"
+   keys[259] = "KEY_UP"
+   keys[260] = "KEY_LEFT"
+   keys[261] = "KEY_RIGHT"
+   keys[264] = "KEY_F0"
+   keys[265] = "KEY_F1"
+   keys[266] = "KEY_F2"
+   keys[267] = "KEY_F3"
+   keys[268] = "KEY_F4"
+   keys[269] = "KEY_F5"
+   keys[270] = "KEY_F6"
+   keys[271] = "KEY_F7"
+   keys[272] = "KEY_F8"
+   keys[273] = "KEY_F9"
+   keys[274] = "KEY_F10"
+   keys[275] = "KEY_F11"
+   keys[276] = "KEY_F12"
+   keys[10] = "KEY_ENTER"
+   M_mt.Keys = keys
 
    for c, v in pairs(constants) do
       M_mt[c] = v
+   end
+
+   for c,v in pairs(keys) do
    end
 
    for mf, mo in pairs(mt_methods_ncursesWrapper) do
@@ -324,7 +326,7 @@ M_mt.GetCh = function (ncurses, panel, ncursesWrapper)
    return function ()
       local c = ncurses.getch()
       if c <= 31 or c >= 256 and c <= 511 then
-         return Curses.Keys[c] or "KEY_UNKNOW"
+         return M_mt.Keys[c] or "KEY_UNKNOW"
       end
       return string.char(c)
    end
@@ -338,7 +340,7 @@ M_mt.WGetCh = function (ncurses, panel, ncursesWrapper)
       end
 
       if c <= 31 or c >= 256 and c <= 511 then
-         return Curses.Keys[c] or "KEY_UNKNOW"
+         return M_mt.Keys[c] or "KEY_UNKNOW"
       end
       return string.char(c)
    end
